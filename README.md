@@ -40,7 +40,7 @@ cp .env.example .env
 
 Required variables:
 - `DATABASE_URL` — Database connection (default: `file:./prisma/dev.db`)
-- `ANTHROPIC_API_KEY` — Your Anthropic API key for AI scraping
+- `ANTHROPIC_API_KEY` — Your Anthropic API key for AI scraping (get one at https://console.anthropic.com/)
 
 ### Database Setup
 

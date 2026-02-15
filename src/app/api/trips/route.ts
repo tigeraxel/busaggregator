@@ -13,8 +13,12 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "20");
 
     // Build where clause
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const where: any = { isActive: true };
+    const where: {
+      isActive: boolean;
+      destination?: { contains: string };
+      price?: { lte: number };
+      weekNumber?: number;
+    } = { isActive: true };
 
     if (destination) {
       where.destination = { contains: destination };
