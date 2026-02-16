@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import SearchForm, { SearchFilters } from "@/components/SearchForm";
 import TripCard from "@/components/TripCard";
 import PriceAlertForm from "@/components/PriceAlertForm";
@@ -29,23 +30,28 @@ interface TripData {
 }
 
 export default function Home() {
+  const router = useRouter();
   const [trips, setTrips] = useState<TripData[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
 
   const handleSearch = useCallback(async (filters: SearchFilters) => {
+    // Navigate to search page with filters
+    const params = new URLSearchParams();
+    if (filters.departureCity)
+      params.set("departureCity", filters.departureCity);
+    if (filters.destination) params.set("destination", filters.destination);
+    if (filters.maxPrice) params.set("maxPrice", filters.maxPrice);
+    if (filters.weekNumber) params.set("weekNumber", filters.weekNumber);
+
+    router.push(`/search?${params.toString()}`);
+
+    // Also show inline results
     setLoading(true);
     setHasSearched(true);
 
     try {
-      const params = new URLSearchParams();
-      if (filters.departureCity)
-        params.set("departureCity", filters.departureCity);
-      if (filters.destination) params.set("destination", filters.destination);
-      if (filters.maxPrice) params.set("maxPrice", filters.maxPrice);
-      if (filters.weekNumber) params.set("weekNumber", filters.weekNumber);
-
       const res = await fetch(`/api/trips?${params.toString()}`);
       const data = await res.json();
 
@@ -57,7 +63,7 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [router]);
 
   return (
     <div className="min-h-screen bg-gray-50">
