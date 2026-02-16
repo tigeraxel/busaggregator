@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model BusCompany {
+  id            Int       @id @default(autoincrement())
+  name          String
+  websiteUrl    String
+  scrapeUrl     String
+  logoUrl       String?
+  isActive      Boolean   @default(true)
+  lastScrapedAt DateTime?
+  createdAt     DateTime  @default(now())
+  trips         Trip[]
+  scrapeLogs    ScrapeLog[]
+}
+
+model Trip {
+  id                 Int       @id @default(autoincrement())
+  companyId          Int
+  company            BusCompany @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  destination        String
+  destinationCountry String?
+  departureCities    String    // JSON array stored as string
+  stops              String?   // JSON array stored as string
+  price              Float
+  currency           String    @default("SEK")
+  weekNumber         Int?
+  startDate          String?
+  endDate            String?
+  includes           String?   // JSON array stored as string
+  hotelName          String?
+  hotelStars         Int?
+  bookingUrl         String
+  originalDescription String?
+  scrapedAt          DateTime  @default(now())
+  isActive           Boolean   @default(true)
+  createdAt          DateTime  @default(now())
+  clicks             Click[]
+}
+
+model PriceAlert {
+  id            Int       @id @default(autoincrement())
+  email         String
+  departureCity String
+  destination   String?
+  maxPrice      Float?
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+}
+
+model Click {
+  id        Int       @id @default(autoincrement())
+  tripId    Int
+  trip      Trip      @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  clickedAt DateTime  @default(now())
+  userIp    String?
+  referrer  String?
+}
+
+model ScrapeLog {
+  id         Int       @id @default(autoincrement())
+  companyId  Int
+  company    BusCompany @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  status     String    // "success" | "error"
+  message    String?
+  tripsFound Int       @default(0)
+  createdAt  DateTime  @default(now())
+}
