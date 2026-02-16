@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 interface TripCardProps {
   trip: {
@@ -139,13 +140,21 @@ export default function TripCard({ trip }: TripCardProps) {
         <span className="text-sm text-gray-500">
           via <span className="font-medium">{trip.company.name}</span>
         </span>
-        <button
-          onClick={handleBookClick}
-          disabled={isTracking}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-lg transition-colors disabled:opacity-50 cursor-pointer"
-        >
-          {isTracking ? "Laddar..." : "Boka nu →"}
-        </button>
+        <div className="flex gap-2">
+          <Link
+            href={`/trip/${trip.id}`}
+            className="text-blue-600 hover:text-blue-700 text-sm font-medium px-4 py-2 rounded-lg border border-blue-200 hover:bg-blue-50 transition-colors"
+          >
+            Detaljer
+          </Link>
+          <button
+            onClick={handleBookClick}
+            disabled={isTracking}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-lg transition-colors disabled:opacity-50 cursor-pointer"
+          >
+            {isTracking ? "Laddar..." : "Boka nu →"}
+          </button>
+        </div>
       </div>
     </div>
   );
