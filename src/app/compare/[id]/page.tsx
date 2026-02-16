@@ -243,7 +243,7 @@ export default function ComparePage() {
               </div>
               <div>
                 <label className="block text-xs text-gray-500 mb-0.5">
-                  Bränsleförbrukning (kr/km)
+                  Bränsleförbrukning (liter/km)
                 </label>
                 <input
                   type="number"
